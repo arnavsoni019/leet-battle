@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Real-time LeetCode profile comparison dashboard">
+    <title>LeetCode Battle Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="dashboard-styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div class="background-gradient"></div>
+
+    <div class="dashboard-container">
+        <header class="dashboard-header">
+            <div class="header-content">
+                <h1 class="dashboard-title">⚡ Battle Dashboard</h1>
+                <div class="header-controls">
+                    <button id="change-users-btn" class="change-users-btn">Change Users</button>
+                    <button id="manual-refresh-btn" class="manual-refresh-btn">
+                        <span class="refresh-icon">🔄</span> Refresh
+                    </button>
+                </div>
+            </div>
+            <div class="auto-refresh-control">
+                <label class="toggle-container">
+                    <input type="checkbox" id="auto-refresh-toggle" checked>
+                    <span class="toggle-slider"></span>
+                    <span class="toggle-label">Auto-refresh (30s)</span>
+                </label>
+                <span id="refresh-timer" class="refresh-timer"></span>
+            </div>
+        </header>
+
+        <div id="loading" class="loading hidden">
+            <div class="loading-spinner"></div>
+            <p>Loading battle stats...</p>
+        </div>
+
+        <div id="error-message" class="error-message hidden"></div>
+
+        <div id="dashboard-content" class="dashboard-content hidden">
+            <!-- Today's Submissions Section -->
+            <section class="streaks-section">
+                <div class="streak-card" id="user1-streak-card">
+                    <div class="streak-header">
+                        <span class="streak-icon">📝</span>
+                        <h3 id="user1-name" class="streak-username"></h3>
+                    </div>
+                    <div class="streak-value" id="user1-streak">0</div>
+                    <div class="streak-label">Submissions Today</div>
+                </div>
+
+                <div class="streak-card" id="user2-streak-card">
+                    <div class="streak-header">
+                        <span class="streak-icon">📝</span>
+                        <h3 id="user2-name" class="streak-username"></h3>
+                    </div>
+                    <div class="streak-value" id="user2-streak">0</div>
+                    <div class="streak-label">Submissions Today</div>
+                </div>
+            </section>
+
+            <!-- 7-Day Submissions Chart -->
+            <section class="chart-section">
+                <h2 class="section-title">📊 Last 7 Days Activity</h2>
+                <div class="chart-container">
+                    <canvas id="submissions-chart"></canvas>
+                </div>
+            </section>
+
+            <!-- Main Stats Comparison -->
+            <section class="stats-section">
+                <div class="profile-card" id="user1-card">
+                    <div class="card-header">
+                        <div class="user-info">
+                            <h2 class="username" id="user1-username"></h2>
+                            <div class="rank-badge" id="user1-rank"></div>
+                        </div>
+                        <div class="status-indicator" id="user1-status"></div>
+                    </div>
+
+                    <div class="stats-grid">
+                        <div class="stat-item total-solved">
+                            <div class="stat-label">Total Solved</div>
+                            <div class="stat-value" id="user1-total"></div>
+                        </div>
+
+                        <div class="stat-item">
+                            <div class="stat-label">Acceptance Rate</div>
+                            <div class="stat-value" id="user1-acceptance"></div>
+                        </div>
+
+                        <div class="stat-item">
+                            <div class="stat-label">Ranking</div>
+                            <div class="stat-value" id="user1-ranking"></div>
+                        </div>
+
+
+                    </div>
+
+                    <div class="difficulty-breakdown">
+                        <h3>Problems by Difficulty</h3>
+
+                        <div class="difficulty-item">
+                            <div class="difficulty-header">
+                                <span class="difficulty-label easy">Easy</span>
+                                <span class="difficulty-count" id="user1-easy"></span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill easy" id="user1-easy-bar"></div>
+                            </div>
+                        </div>
+
+                        <div class="difficulty-item">
+                            <div class="difficulty-header">
+                                <span class="difficulty-label medium">Medium</span>
+                                <span class="difficulty-count" id="user1-medium"></span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill medium" id="user1-medium-bar"></div>
+                            </div>
+                        </div>
+
+                        <div class="difficulty-item">
+                            <div class="difficulty-header">
+                                <span class="difficulty-label hard">Hard</span>
+                                <span class="difficulty-count" id="user1-hard"></span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill hard" id="user1-hard-bar"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-card" id="user2-card">
+                    <div class="card-header">
+                        <div class="user-info">
+                            <h2 class="username" id="user2-username"></h2>
+                            <div class="rank-badge" id="user2-rank"></div>
+                        </div>
+                        <div class="status-indicator" id="user2-status"></div>
+                    </div>
+
+                    <div class="stats-grid">
+                        <div class="stat-item total-solved">
+                            <div class="stat-label">Total Solved</div>
+                            <div class="stat-value" id="user2-total"></div>
+                        </div>
+
+                        <div class="stat-item">
+                            <div class="stat-label">Acceptance Rate</div>
+                            <div class="stat-value" id="user2-acceptance"></div>
+                        </div>
+
+                        <div class="stat-item">
+                            <div class="stat-label">Ranking</div>
+                            <div class="stat-value" id="user2-ranking"></div>
+                        </div>
+
+
+                    </div>
+
+                    <div class="difficulty-breakdown">
+                        <h3>Problems by Difficulty</h3>
+
+                        <div class="difficulty-item">
+                            <div class="difficulty-header">
+                                <span class="difficulty-label easy">Easy</span>
+                                <span class="difficulty-count" id="user2-easy"></span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill easy" id="user2-easy-bar"></div>
+                            </div>
+                        </div>
+
+                        <div class="difficulty-item">
+                            <div class="difficulty-header">
+                                <span class="difficulty-label medium">Medium</span>
+                                <span class="difficulty-count" id="user2-medium"></span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill medium" id="user2-medium-bar"></div>
+                            </div>
+                        </div>
+
+                        <div class="difficulty-item">
+                            <div class="difficulty-header">
+                                <span class="difficulty-label hard">Hard</span>
+                                <span class="difficulty-count" id="user2-hard"></span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill hard" id="user2-hard-bar"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Recent Problems Section -->
+            <section class="recent-problems-section">
+                <div class="problems-column">
+                    <h2 class="section-title">
+                        <span id="user1-problems-title"></span> Recent Solves
+                    </h2>
+                    <div class="problems-list" id="user1-problems"></div>
+                </div>
+
+                <div class="problems-column">
+                    <h2 class="section-title">
+                        <span id="user2-problems-title"></span> Recent Solves
+                    </h2>
+                    <div class="problems-list" id="user2-problems"></div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script src="dashboard.js"></script>
+</body>
+
+</html>

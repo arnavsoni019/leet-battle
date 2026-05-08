@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Chart Test</title>
+    <style>
+        body {
+            background: #1a202c;
+            color: white;
+            padding: 20px;
+            font-family: Arial;
+        }
+
+        .chart-container {
+            background: #2d3748;
+            border: 2px solid #4a5568;
+            padding: 20px;
+            margin: 20px 0;
+            width: 800px;
+            height: 350px;
+        }
+
+        canvas {
+            display: block;
+            width: 100% !important;
+            height: 300px !important;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Chart Rendering Test</h1>
+    <p>If you can see a chart below with grid lines and day labels, the chart code works!</p>
+
+    <div class="chart-container">
+        <canvas id="test-chart"></canvas>
+    </div>
+
+    <div id="info"></div>
+
+    <script>
+        const canvas = document.getElementById('test-chart');
+        const ctx = canvas.getContext('2d');
+
+        // Set canvas size explicitly
+        canvas.width = 800;
+        canvas.height = 300;
+
+        document.getElementById('info').innerHTML = `
+            <p>Canvas dimensions: ${canvas.width} x ${canvas.height}</p>
+            <p>Canvas offsetWidth: ${canvas.offsetWidth}</p>
+            <p>Canvas offsetHeight: ${canvas.offsetHeight}</p>
+        `;
+
+        // Test data - all zeros like your real data
+        const data1 = [
+            { count: 0, date: '02/09', dayName: 'Mon' },
+            { count: 0, date: '02/10', dayName: 'Tue' },
+            { count: 0, date: '02/11', dayName: 'Wed' },
+            { count: 0, date: '02/12', dayName: 'Thu' },
+            { count: 0, date: '02/13', dayName: 'Fri' },
+            { count: 0, date: '02/14', dayName: 'Sat' },
+            { count: 0, date: '02/15', dayName: 'Sun' }
+        ];
+
+        const data2 = [...data1];
+
+        // Draw chart
+        const padding = 50;
+        const chartWidth = canvas.width - padding * 2;
+        const chartHeight = canvas.height - padding * 2;
+        const maxValue = 5;
+
+        // Dark background
+        ctx.fillStyle = '#1a202c';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Grid lines
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+        ctx.lineWidth = 1;
+        for (let i = 0; i <= 5; i++) {
+            const y = padding + (chartHeight / 5) * i;
+            ctx.beginPath();
+            ctx.moveTo(padding, y);
+            ctx.lineTo(canvas.width - padding, y);
+            ctx.stroke();
+        }
+
+        // Y-axis labels
+        ctx.fillStyle = '#a0aec0';
+        ctx.font = '12px Arial';
+        ctx.textAlign = 'right';
+        for (let i = 0; i <= 5; i++) {
+            const value = Math.round((maxValue / 5) * (5 - i));
+            const y = padding + (chartHeight / 5) * i;
+            ctx.fillText(value, padding - 10, y + 4);
+        }
+
+        // Baseline
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(padding, canvas.height - padding);
+        ctx.lineTo(canvas.width - padding, canvas.height - padding);
+        ctx.stroke();
+
+        // Day labels
+        const barWidth = chartWidth / (data1.length * 3);
+        const gap = barWidth / 2;
+
+        data1.forEach((day, index) => {
+            const x = padding + index * (barWidth * 2 + gap * 2);
+            ctx.fillStyle = '#cbd5e0';
+            ctx.font = '13px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText(day.dayName, x + barWidth + gap / 2, canvas.height - padding + 25);
+        });
+
+        // Legend
+        ctx.fillStyle = '#00d4ff';
+        ctx.fillRect(padding, 15, 15, 15);
+        ctx.fillStyle = '#ffffff';
+        ctx.font = '14px Arial';
+        ctx.textAlign = 'left';
+        ctx.fillText('User 1', padding + 22, 27);
+
+        ctx.fillStyle = '#7c3aed';
+        ctx.fillRect(padding + 150, 15, 15, 15);
+        ctx.fillStyle = '#ffffff';
+        ctx.fillText('User 2', padding + 172, 27);
+
+        // Title
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 16px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText('7-Day Submission Activity (All Zeros)', canvas.width / 2, canvas.height - 10);
+
+        console.log('Test chart drawn!');
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Compare your LeetCode profile with friends in real-time. Track progress, submissions, and stay motivated.">
+    <title>LeetCode Battle Arena - Compare Profiles</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0e27;
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .background-gradient {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 50%, rgba(102, 126, 234, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(124, 58, 237, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(0, 212, 255, 0.1) 0%, transparent 50%);
+            z-index: -1;
+            animation: gradientShift 15s ease infinite;
+        }
+
+        @keyframes gradientShift {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.8;
+            }
+        }
+
+        .container {
+            max-width: 600px;
+            width: 90%;
+            padding: 3rem;
+            background: rgba(30, 35, 60, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        .title {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #00d4ff 0%, #7c3aed 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+            animation: titlePulse 2s ease-in-out infinite;
+        }
+
+        @keyframes titlePulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.02);
+            }
+        }
+
+        .subtitle {
+            font-size: 1.125rem;
+            color: #a0aec0;
+            font-weight: 500;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 3rem;
+        }
+
+        .input-section {
+            margin-bottom: 2rem;
+        }
+
+        .input-wrapper {
+            margin-bottom: 1.5rem;
+        }
+
+        .input-wrapper label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #a0aec0;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-align: left;
+        }
+
+        .input-wrapper input {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: #ffffff;
+            font-size: 1.125rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .input-wrapper input:focus {
+            border-color: #00d4ff;
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 0 4px rgba(0, 212, 255, 0.1);
+        }
+
+        .input-wrapper input::placeholder {
+            color: #718096;
+        }
+
+        .vs-divider {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #00d4ff;
+            margin: 1.5rem 0;
+            text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+        }
+
+        .start-btn {
+            width: 100%;
+            padding: 1.25rem 2rem;
+            background: linear-gradient(135deg, #00d4ff 0%, #7c3aed 100%);
+            border: none;
+            border-radius: 12px;
+            color: #ffffff;
+            font-size: 1.25rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .start-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .start-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 20px rgba(0, 212, 255, 0.3);
+        }
+
+        .start-btn:hover::before {
+            left: 100%;
+        }
+
+        .start-btn:active {
+            transform: translateY(0);
+        }
+
+        .start-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .error-message {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid #ef4444;
+            border-radius: 12px;
+            padding: 1rem;
+            margin-top: 1rem;
+            color: #ef4444;
+            font-weight: 500;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 2rem;
+            }
+
+            .title {
+                font-size: 2rem;
+            }
+
+            .subtitle {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="background-gradient"></div>
+
+    <div class="container">
+        <h1 class="title">⚡ LeetCode Battle Arena ⚡</h1>
+        <p class="subtitle">Compare. Compete. Conquer.</p>
+
+        <div class="input-section">
+            <div class="input-wrapper">
+                <label for="user1-input">Your LeetCode Username</label>
+                <input type="text" id="user1-input" placeholder="Enter your username" autocomplete="off">
+            </div>
+
+            <div class="vs-divider">VS</div>
+
+            <div class="input-wrapper">
+                <label for="user2-input">Friend's LeetCode Username</label>
+                <input type="text" id="user2-input" placeholder="Enter friend's username" autocomplete="off">
+            </div>
+        </div>
+
+        <button id="start-btn" class="start-btn">
+            🚀 Start Comparison
+        </button>
+
+        <div id="error-message" class="error-message"></div>
+    </div>
+
+    <script>
+        const user1Input = document.getElementById('user1-input');
+        const user2Input = document.getElementById('user2-input');
+        const startBtn = document.getElementById('start-btn');
+        const errorMessage = document.getElementById('error-message');
+
+        // Load saved usernames
+        const savedUser1 = localStorage.getItem('leetcode_user1');
+        const savedUser2 = localStorage.getItem('leetcode_user2');
+
+        if (savedUser1) user1Input.value = savedUser1;
+        if (savedUser2) user2Input.value = savedUser2;
+
+        // Handle Enter key
+        user1Input.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') startComparison();
+        });
+
+        user2Input.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') startComparison();
+        });
+
+        startBtn.addEventListener('click', startComparison);
+
+        function startComparison() {
+            const username1 = user1Input.value.trim();
+            const username2 = user2Input.value.trim();
+
+            // Validate inputs
+            if (!username1 || !username2) {
+                showError('Please enter both usernames');
+                return;
+            }
+
+            if (username1 === username2) {
+                showError('Please enter different usernames');
+                return;
+            }
+
+            // Save usernames
+            localStorage.setItem('leetcode_user1', username1);
+            localStorage.setItem('leetcode_user2', username2);
+
+            // Redirect to dashboard
+            window.location.href = `dashboard.html?user1=${encodeURIComponent(username1)}&user2=${encodeURIComponent(username2)}`;
+        }
+
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.classList.add('show');
+            setTimeout(() => {
+                errorMessage.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+</body>
+
+</html>

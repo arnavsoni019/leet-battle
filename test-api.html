@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>API Test</title>
+    <style>
+        body {
+            font-family: monospace;
+            padding: 20px;
+            background: #1a1a1a;
+            color: #fff;
+        }
+
+        pre {
+            background: #2a2a2a;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>LeetCode API Test</h1>
+    <button onclick="testAPI()">Test API for user: lee215</button>
+    <div id="output"></div>
+
+    <script>
+        async function testAPI() {
+            const output = document.getElementById('output');
+            output.innerHTML = '<p>Loading...</p>';
+
+            try {
+                const response = await fetch('http://localhost:5000/api/user/lee215/detailed');
+                const data = await response.json();
+
+                output.innerHTML = `
+                    <h2>API Response:</h2>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                    
+                    <h2>Key Values:</h2>
+                    <ul>
+                        <li><strong>Username:</strong> ${data.username}</li>
+                        <li><strong>Total Solved:</strong> ${data.totalSolved}</li>
+                        <li><strong>Acceptance Rate:</strong> ${data.acceptanceRate}%</li>
+                        <li><strong>Today's Submissions:</strong> ${data.todaySubmissions}</li>
+                        <li><strong>7-Day Data Length:</strong> ${data.sevenDaySubmissions ? data.sevenDaySubmissions.length : 0}</li>
+                        <li><strong>7-Day Data:</strong> ${JSON.stringify(data.sevenDaySubmissions)}</li>
+                        <li><strong>Recent Problems:</strong> ${data.recentProblems ? data.recentProblems.length : 0} problems</li>
+                    </ul>
+                `;
+            } catch (error) {
+                output.innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
+            }
+        }
+    </script>
+</body>
+
+</html>
