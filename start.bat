@@ -17,9 +17,9 @@ start "LeetCode File Server" /min cmd /c "python -m http.server 8000"
 echo Starting servers...
 timeout /t 3 /nobreak >nul
 
-:: Open dashboard directly (default users are hardcoded in dashboard.js)
-echo Opening dashboard...
-start http://localhost:8000/dashboard.html
+:: Open landing page for user to enter their usernames
+echo Opening landing page...
+start http://localhost:8000/landing.html
 
 echo.
 echo Servers are running! Close this window when done.

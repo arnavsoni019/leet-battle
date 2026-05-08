@@ -1,6 +1,6 @@
 // Configuration
 const API_BASE_URL = 'http://localhost:5000/api';
-const AUTO_REFRESH_INTERVAL = 30000;
+const AUTO_REFRESH_INTERVAL = 120000; // 2 minutes
 
 let autoRefreshEnabled = true;
 let refreshTimer = null;
@@ -100,6 +100,7 @@ async function fetchDetailedUserData(username) {
 }
 
 function displayDashboard(data1, data2) {
+    dashboardContent.classList.remove('hidden');
     updateStreaks(data1, data2);
     update7DayChart(data1, data2);
     updateUserCard('user1', data1);
@@ -107,7 +108,6 @@ function displayDashboard(data1, data2) {
     updateStatusIndicators(data1, data2);
     updateRecentProblems('user1', data1);
     updateRecentProblems('user2', data2);
-    dashboardContent.classList.remove('hidden');
 }
 
 function updateStreaks(data1, data2) {
@@ -135,131 +135,200 @@ function update7DayChart(data1, data2) {
         return;
     }
 
-    const ctx = canvas.getContext('2d');
-    canvas.width = 800;
-    canvas.height = 300;
+    const container = canvas.parentElement;
+    const rect = container.getBoundingClientRect();
+    const logicalWidth = rect.width || 800;
+    const logicalHeight = rect.height || 300;
+    
+    const dpr = window.devicePixelRatio || 1;
+    
+    // Set actual size in memory (scaled to account for extra pixel density)
+    canvas.width = logicalWidth * dpr;
+    canvas.height = logicalHeight * dpr;
+    
+    // Normalize coordinate system to use CSS pixels
+    canvas.style.width = '100%';
+    canvas.style.height = '100%';
 
-    console.log('Canvas size:', canvas.width, 'x', canvas.height);
+    const ctx = canvas.getContext('2d');
+    ctx.scale(dpr, dpr);
+
+    console.log('Canvas logical size:', logicalWidth, 'x', logicalHeight, 'DPR:', dpr);
 
     const submissions1 = data1.sevenDaySubmissions || [];
     const submissions2 = data2.sevenDaySubmissions || [];
-
-    console.log('Chart data1:', submissions1);
-    console.log('Chart data2:', submissions2);
 
     if (submissions1.length === 0 && submissions2.length === 0) {
         ctx.fillStyle = '#718096';
         ctx.font = '16px Inter';
         ctx.textAlign = 'center';
-        ctx.fillText('No submission data available', canvas.width / 2, canvas.height / 2);
+        ctx.fillText('No submission data available', logicalWidth / 2, logicalHeight / 2);
         return;
     }
 
-    drawBarChart(ctx, canvas, submissions1, submissions2, data1.username, data2.username);
+    drawBarChart(ctx, logicalWidth, logicalHeight, submissions1, submissions2, data1.username, data2.username);
 }
 
-function drawBarChart(ctx, canvas, data1, data2, username1, username2) {
-    const padding = 50;
-    const chartWidth = canvas.width - padding * 2;
-    const chartHeight = canvas.height - padding * 2;
+function drawBarChart(ctx, logicalWidth, logicalHeight, data1, data2, username1, username2) {
+    const padding = 60;
+    const chartWidth = logicalWidth - padding * 2;
+    const chartHeight = logicalHeight - padding * 2;
 
     // Find max value - minimum 5 for visibility
     const maxValue = Math.max(...data1.map(d => d.count), ...data2.map(d => d.count), 5);
-    const barWidth = chartWidth / (data1.length * 3);
-    const gap = barWidth / 2;
+    const barWidth = Math.min((chartWidth / (data1.length * 3)) * 1.2, 30);
+    const gap = barWidth * 0.5;
 
-    // Clear canvas with dark background
-    ctx.fillStyle = '#0d0d0d';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    // Clear canvas instead of using a solid block to let CSS styles through
+    ctx.clearRect(0, 0, logicalWidth, logicalHeight);
 
-    // Draw grid lines
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.06)';
+    // Draw grid lines as dotted lines
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
     ctx.lineWidth = 1;
+    ctx.setLineDash([5, 5]);
     for (let i = 0; i <= 5; i++) {
         const y = padding + (chartHeight / 5) * i;
         ctx.beginPath();
         ctx.moveTo(padding, y);
-        ctx.lineTo(canvas.width - padding, y);
+        ctx.lineTo(logicalWidth - padding, y);
         ctx.stroke();
     }
+    ctx.setLineDash([]); // reset
 
     // Draw Y-axis labels
     ctx.fillStyle = '#9e9e9e';
-    ctx.font = '11px Inter';
+    ctx.font = '500 12px Inter';
     ctx.textAlign = 'right';
     for (let i = 0; i <= 5; i++) {
         const value = Math.round((maxValue / 5) * (5 - i));
         const y = padding + (chartHeight / 5) * i;
-        ctx.fillText(value, padding - 10, y + 4);
+        ctx.fillText(value, padding - 15, y + 4);
     }
 
     // Draw baseline
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
     ctx.lineWidth = 2;
     ctx.beginPath();
-    ctx.moveTo(padding, canvas.height - padding);
-    ctx.lineTo(canvas.width - padding, canvas.height - padding);
+    ctx.moveTo(padding, logicalHeight - padding);
+    ctx.lineTo(logicalWidth - padding, logicalHeight - padding);
     ctx.stroke();
+
+    const blockWidth = (barWidth * 2) + (gap * 2);
+    const totalContentWidth = data1.length * blockWidth;
+    const startX = padding + (chartWidth - totalContentWidth) / 2;
 
     // Draw bars and labels
     data1.forEach((day, index) => {
-        const x1 = padding + index * (barWidth * 2 + gap * 2);
-        const x2 = x1 + barWidth + gap;
+        const x1 = startX + index * blockWidth;
+        const x2 = x1 + barWidth + gap / 2;
 
         const height1 = (day.count / maxValue) * chartHeight;
         const height2 = (data2[index].count / maxValue) * chartHeight;
 
-        // User 1 bar - show minimum 4px if data exists
-        const displayHeight1 = day.count > 0 ? Math.max(height1, 4) : 0;
+        // Minimum 6px height if data exists
+        const displayHeight1 = day.count > 0 ? Math.max(height1, 6) : 0;
+        const displayHeight2 = data2[index].count > 0 ? Math.max(height2, 6) : 0;
+
+        // Draw background tracks for bars
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.03)';
+        ctx.beginPath();
+        ctx.roundRect(x1, padding, barWidth, chartHeight, [4, 4, 0, 0]);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.roundRect(x2, padding, barWidth, chartHeight, [4, 4, 0, 0]);
+        ctx.fill();
+
+        // User 1 bar with shadow
         if (displayHeight1 > 0) {
-            const gradient1 = ctx.createLinearGradient(0, canvas.height - padding - displayHeight1, 0, canvas.height - padding);
-            gradient1.addColorStop(0, '#e91e63');
+            ctx.shadowColor = 'rgba(233, 30, 99, 0.5)';
+            ctx.shadowBlur = 12;
+            ctx.shadowOffsetY = 4;
+            
+            const gradient1 = ctx.createLinearGradient(0, logicalHeight - padding - displayHeight1, 0, logicalHeight - padding);
+            gradient1.addColorStop(0, '#ff4081');
             gradient1.addColorStop(1, '#c2185b');
             ctx.fillStyle = gradient1;
-            ctx.fillRect(x1, canvas.height - padding - displayHeight1, barWidth, displayHeight1);
+            
+            ctx.beginPath();
+            ctx.roundRect(x1, logicalHeight - padding - displayHeight1, barWidth, displayHeight1, [6, 6, 0, 0]);
+            ctx.fill();
+            
+            // reset shadow for text
+            ctx.shadowColor = 'transparent';
+            ctx.shadowBlur = 0;
+            
+            // Draw count label
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 12px Inter';
+            ctx.textAlign = 'center';
+            ctx.fillText(day.count, x1 + barWidth / 2, logicalHeight - padding - displayHeight1 - 10);
         }
 
-        // User 2 bar - show minimum 4px if data exists
-        const displayHeight2 = data2[index].count > 0 ? Math.max(height2, 4) : 0;
+        // User 2 bar with shadow
         if (displayHeight2 > 0) {
-            const gradient2 = ctx.createLinearGradient(0, canvas.height - padding - displayHeight2, 0, canvas.height - padding);
-            gradient2.addColorStop(0, '#00bfa5');
+            ctx.shadowColor = 'rgba(0, 191, 165, 0.5)';
+            ctx.shadowBlur = 12;
+            ctx.shadowOffsetY = 4;
+            
+            const gradient2 = ctx.createLinearGradient(0, logicalHeight - padding - displayHeight2, 0, logicalHeight - padding);
+            gradient2.addColorStop(0, '#1de9b6');
             gradient2.addColorStop(1, '#00897b');
             ctx.fillStyle = gradient2;
-            ctx.fillRect(x2, canvas.height - padding - displayHeight2, barWidth, displayHeight2);
+            
+            ctx.beginPath();
+            ctx.roundRect(x2, logicalHeight - padding - displayHeight2, barWidth, displayHeight2, [6, 6, 0, 0]);
+            ctx.fill();
+            
+            // reset shadow for text
+            ctx.shadowColor = 'transparent';
+            ctx.shadowBlur = 0;
+
+            // Draw count label
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 12px Inter';
+            ctx.textAlign = 'center';
+            ctx.fillText(data2[index].count, x2 + barWidth / 2, logicalHeight - padding - displayHeight2 - 10);
         }
 
         // Draw day labels
-        ctx.fillStyle = '#9e9e9e';
-        ctx.font = '12px Inter';
+        ctx.fillStyle = '#a0aec0';
+        ctx.font = '500 13px Inter';
         ctx.textAlign = 'center';
-        ctx.fillText(day.dayName, x1 + barWidth + gap / 2, canvas.height - padding + 20);
-
-        // Draw count labels above bars
-        if (day.count > 0) {
-            ctx.fillStyle = '#ffffff';
-            ctx.font = 'bold 11px Inter';
-            ctx.fillText(day.count, x1 + barWidth / 2, canvas.height - padding - displayHeight1 - 5);
-        }
-        if (data2[index].count > 0) {
-            ctx.fillStyle = '#ffffff';
-            ctx.font = 'bold 11px Inter';
-            ctx.fillText(data2[index].count, x2 + barWidth / 2, canvas.height - padding - displayHeight2 - 5);
-        }
+        ctx.fillText(day.dayName, x1 + barWidth + gap / 4, logicalHeight - padding + 25);
     });
 
-    // Draw legend
-    ctx.fillStyle = '#e91e63';
-    ctx.fillRect(padding, 15, 15, 15);
-    ctx.fillStyle = '#ffffff';
-    ctx.font = '13px Inter';
+    // Draw modern legend
+    const legendY = 25;
+    
+    // User 1 Legend
+    ctx.shadowColor = 'rgba(233, 30, 99, 0.5)';
+    ctx.shadowBlur = 10;
+    ctx.fillStyle = '#ff4081';
+    ctx.beginPath();
+    ctx.arc(padding + 20, legendY, 6, 0, 2 * Math.PI);
+    ctx.fill();
+    
+    ctx.shadowColor = 'transparent';
+    ctx.shadowBlur = 0;
+    ctx.fillStyle = '#e0e0e0';
+    ctx.font = '600 13px Inter';
     ctx.textAlign = 'left';
-    ctx.fillText(username1, padding + 22, 27);
+    ctx.fillText(username1, padding + 35, legendY + 4);
 
-    ctx.fillStyle = '#00bfa5';
-    ctx.fillRect(padding + 180, 15, 15, 15);
-    ctx.fillStyle = '#ffffff';
-    ctx.fillText(username2, padding + 202, 27);
+    // User 2 Legend
+    const user2LegendX = padding + 150 + ctx.measureText(username1).width;
+    ctx.shadowColor = 'rgba(0, 191, 165, 0.5)';
+    ctx.shadowBlur = 10;
+    ctx.fillStyle = '#1de9b6';
+    ctx.beginPath();
+    ctx.arc(user2LegendX, legendY, 6, 0, 2 * Math.PI);
+    ctx.fill();
+    
+    ctx.shadowColor = 'transparent';
+    ctx.shadowBlur = 0;
+    ctx.fillStyle = '#e0e0e0';
+    ctx.fillText(username2, user2LegendX + 15, legendY + 4);
 
     console.log('Chart drawn successfully');
 }
