@@ -259,13 +259,6 @@
         const startBtn = document.getElementById('start-btn');
         const errorMessage = document.getElementById('error-message');
 
-        // Load saved usernames
-        const savedUser1 = localStorage.getItem('leetcode_user1');
-        const savedUser2 = localStorage.getItem('leetcode_user2');
-
-        if (savedUser1) user1Input.value = savedUser1;
-        if (savedUser2) user2Input.value = savedUser2;
-
         // Handle Enter key
         user1Input.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') startComparison();
@@ -293,6 +286,8 @@
             }
 
             // Save usernames
+            localStorage.removeItem('leetcode_user1');
+            localStorage.removeItem('leetcode_user2');
             localStorage.setItem('leetcode_user1', username1);
             localStorage.setItem('leetcode_user2', username2);
 

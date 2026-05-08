@@ -1,8 +1,6 @@
 // Configuration
 const API_BASE_URL = 'http://localhost:5000/api';
 const AUTO_REFRESH_INTERVAL = 30000;
-const DEFAULT_USER1 = 'YYf6XMnK1y';
-const DEFAULT_USER2 = 'divsanjog_singh';
 
 let autoRefreshEnabled = true;
 let refreshTimer = null;
@@ -20,8 +18,14 @@ const dashboardContent = document.getElementById('dashboard-content');
 
 document.addEventListener('DOMContentLoaded', () => {
     const urlParams = new URLSearchParams(window.location.search);
-    currentUser1 = urlParams.get('user1') || DEFAULT_USER1;
-    currentUser2 = urlParams.get('user2') || DEFAULT_USER2;
+    currentUser1 = urlParams.get('user1');
+    currentUser2 = urlParams.get('user2');
+
+    // Redirect to landing page if no usernames provided
+    if (!currentUser1 || !currentUser2) {
+        window.location.href = 'landing.html';
+        return;
+    }
 
     setupEventListeners();
     fetchAndDisplay();
