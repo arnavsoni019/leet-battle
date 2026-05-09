@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
 function setupEventListeners() {
     manualRefreshBtn.addEventListener('click', handleManualRefresh);
     changeUsersBtn.addEventListener('click', () => {
-        window.location.href = 'landing.html';
+        window.location.href = 'index.html';
     });
     autoRefreshToggle.addEventListener('change', handleAutoRefreshToggle);
 }

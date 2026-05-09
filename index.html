@@ -1,207 +1,123 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Compare your LeetCode profile with friends in real-time. Track progress, submissions, and stay motivated.">
-    <meta name="keywords" content="LeetCode, comparison, coding, programming, competitive programming">
-    <title>LeetBattle - Track Your Progress</title>
-    <link rel="stylesheet" href="style.css">
+    <meta name="description"
+        content="Compare your LeetCode profile with friends in real-time. Track progress, submissions, and stay motivated.">
+    <title>LeetBattle - Compare Profiles</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+        <link rel="stylesheet" href="style.css?v=1.2">
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        
+        .landing-container {
+            max-width: 600px;
+            width: 90%;
+            padding: 3.5rem;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .landing-container {
+                padding: 2rem;
+            }
+            .title {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
 </head>
+
 <body>
     <div class="background-gradient"></div>
-    
-    <div class="container">
-        <header class="header">
-            <h1 class="title">
-                <span class="title-icon">⚡</span>
-                LeetBattle
-                <span class="title-icon">⚡</span>
-            </h1>
-            <p class="subtitle">Compare. Compete. Conquer.</p>
-        </header>
 
-        <div class="controls-section">
-            <div class="input-group">
-                <div class="input-wrapper">
-                    <label for="user1-input">Your Username</label>
-                    <input type="text" id="user1-input" placeholder="Enter your LeetCode username" autocomplete="off">
-                </div>
-                <div class="vs-divider">VS</div>
-                <div class="input-wrapper">
-                    <label for="user2-input">Friend's Username</label>
-                    <input type="text" id="user2-input" placeholder="Enter friend's username" autocomplete="off">
-                </div>
+    <div class="container glass-card landing-container">
+        <h1 class="title">LeetBattle</h1>
+        <p class="subtitle">Compare. Compete. Conquer.</p>
+
+        <div class="input-group">
+            <div class="input-wrapper">
+                <label for="user1-input">Your LeetCode Username</label>
+                <input type="text" id="user1-input" placeholder="Enter your username" autocomplete="off">
             </div>
-            
-            <button id="compare-btn" class="compare-btn">
-                <span class="btn-text">Compare Profiles</span>
-                <span class="btn-icon">🚀</span>
-            </button>
 
-            <div class="refresh-controls">
-                <label class="toggle-container">
-                    <input type="checkbox" id="auto-refresh-toggle" checked>
-                    <span class="toggle-slider"></span>
-                    <span class="toggle-label">Auto-refresh (30s)</span>
-                </label>
-                <button id="manual-refresh-btn" class="manual-refresh-btn">
-                    <span class="refresh-icon">🔄</span>
-                    Refresh Now
-                </button>
-                <span id="refresh-timer" class="refresh-timer"></span>
+            <div class="vs-divider">VS</div>
+
+            <div class="input-wrapper">
+                <label for="user2-input">Friend's LeetCode Username</label>
+                <input type="text" id="user2-input" placeholder="Enter friend's username" autocomplete="off">
             </div>
         </div>
 
-        <div id="loading" class="loading hidden">
-            <div class="loading-spinner"></div>
-            <p>Fetching battle stats...</p>
-        </div>
+        <button id="start-btn" class="start-btn">
+            Start Comparison
+        </button>
 
-        <div id="error-message" class="error-message hidden"></div>
-
-        <div id="comparison-container" class="comparison-container hidden">
-            <div class="profile-card" id="user1-card">
-                <div class="card-header">
-                    <div class="user-info">
-                        <h2 class="username" id="user1-username"></h2>
-                        <div class="rank-badge" id="user1-rank"></div>
-                    </div>
-                    <div class="status-indicator" id="user1-status"></div>
-                </div>
-
-                <div class="stats-grid">
-                    <div class="stat-item total-solved">
-                        <div class="stat-label">Total Solved</div>
-                        <div class="stat-value" id="user1-total"></div>
-                    </div>
-                    
-                    <div class="stat-item">
-                        <div class="stat-label">Acceptance Rate</div>
-                        <div class="stat-value" id="user1-acceptance"></div>
-                    </div>
-
-                    <div class="stat-item">
-                        <div class="stat-label">Recent Accepted</div>
-                        <div class="stat-value" id="user1-recent"></div>
-                    </div>
-
-                    <div class="stat-item">
-                        <div class="stat-label">Reputation</div>
-                        <div class="stat-value" id="user1-reputation"></div>
-                    </div>
-                </div>
-
-                <div class="difficulty-breakdown">
-                    <h3>Problems by Difficulty</h3>
-                    
-                    <div class="difficulty-item">
-                        <div class="difficulty-header">
-                            <span class="difficulty-label easy">Easy</span>
-                            <span class="difficulty-count" id="user1-easy"></span>
-                        </div>
-                        <div class="progress-bar">
-                            <div class="progress-fill easy" id="user1-easy-bar"></div>
-                        </div>
-                    </div>
-
-                    <div class="difficulty-item">
-                        <div class="difficulty-header">
-                            <span class="difficulty-label medium">Medium</span>
-                            <span class="difficulty-count" id="user1-medium"></span>
-                        </div>
-                        <div class="progress-bar">
-                            <div class="progress-fill medium" id="user1-medium-bar"></div>
-                        </div>
-                    </div>
-
-                    <div class="difficulty-item">
-                        <div class="difficulty-header">
-                            <span class="difficulty-label hard">Hard</span>
-                            <span class="difficulty-count" id="user1-hard"></span>
-                        </div>
-                        <div class="progress-bar">
-                            <div class="progress-fill hard" id="user1-hard-bar"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="profile-card" id="user2-card">
-                <div class="card-header">
-                    <div class="user-info">
-                        <h2 class="username" id="user2-username"></h2>
-                        <div class="rank-badge" id="user2-rank"></div>
-                    </div>
-                    <div class="status-indicator" id="user2-status"></div>
-                </div>
-
-                <div class="stats-grid">
-                    <div class="stat-item total-solved">
-                        <div class="stat-label">Total Solved</div>
-                        <div class="stat-value" id="user2-total"></div>
-                    </div>
-                    
-                    <div class="stat-item">
-                        <div class="stat-label">Acceptance Rate</div>
-                        <div class="stat-value" id="user2-acceptance"></div>
-                    </div>
-
-                    <div class="stat-item">
-                        <div class="stat-label">Recent Accepted</div>
-                        <div class="stat-value" id="user2-recent"></div>
-                    </div>
-
-                    <div class="stat-item">
-                        <div class="stat-label">Reputation</div>
-                        <div class="stat-value" id="user2-reputation"></div>
-                    </div>
-                </div>
-
-                <div class="difficulty-breakdown">
-                    <h3>Problems by Difficulty</h3>
-                    
-                    <div class="difficulty-item">
-                        <div class="difficulty-header">
-                            <span class="difficulty-label easy">Easy</span>
-                            <span class="difficulty-count" id="user2-easy"></span>
-                        </div>
-                        <div class="progress-bar">
-                            <div class="progress-fill easy" id="user2-easy-bar"></div>
-                        </div>
-                    </div>
-
-                    <div class="difficulty-item">
-                        <div class="difficulty-header">
-                            <span class="difficulty-label medium">Medium</span>
-                            <span class="difficulty-count" id="user2-medium"></span>
-                        </div>
-                        <div class="progress-bar">
-                            <div class="progress-fill medium" id="user2-medium-bar"></div>
-                        </div>
-                    </div>
-
-                    <div class="difficulty-item">
-                        <div class="difficulty-header">
-                            <span class="difficulty-label hard">Hard</span>
-                            <span class="difficulty-count" id="user2-hard"></span>
-                        </div>
-                        <div class="progress-bar">
-                            <div class="progress-fill hard" id="user2-hard-bar"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <footer class="footer">
-            <p>Built with 💪 for competitive coders | Data from LeetCode</p>
-        </footer>
+        <div id="error-message" class="error-message"></div>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        const user1Input = document.getElementById('user1-input');
+        const user2Input = document.getElementById('user2-input');
+        const startBtn = document.getElementById('start-btn');
+        const errorMessage = document.getElementById('error-message');
+
+        // Handle Enter key
+        user1Input.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') startComparison();
+        });
+
+        user2Input.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') startComparison();
+        });
+
+        startBtn.addEventListener('click', startComparison);
+
+        function startComparison() {
+            const username1 = user1Input.value.trim();
+            const username2 = user2Input.value.trim();
+
+            // Validate inputs
+            if (!username1 || !username2) {
+                showError('Please enter both usernames');
+                return;
+            }
+
+            if (username1 === username2) {
+                showError('Please enter different usernames');
+                return;
+            }
+
+            // Save usernames
+            localStorage.removeItem('leetcode_user1');
+            localStorage.removeItem('leetcode_user2');
+            localStorage.setItem('leetcode_user1', username1);
+            localStorage.setItem('leetcode_user2', username2);
+
+            // Redirect to dashboard
+            window.location.href = `dashboard.html?user1=${encodeURIComponent(username1)}&user2=${encodeURIComponent(username2)}`;
+        }
+
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.classList.add('show');
+            setTimeout(() => {
+                errorMessage.classList.remove('show');
+            }, 3000);
+        }
+    </script>
 </body>
+
 </html>

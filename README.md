@@ -30,7 +30,7 @@ A beautiful, real-time comparison dashboard to track your LeetCode progress agai
 
 1. **Navigate to the project directory**
    ```bash
-   cd a:\Python\leetcode-compare
+   cd a:\Python\leetbattle
    ```
 
 2. **Install Python dependencies**
@@ -45,8 +45,8 @@ A beautiful, real-time comparison dashboard to track your LeetCode progress agai
 Open a terminal and run:
 
 ```bash
-cd a:\Python\leetcode-compare
-python api.py
+cd a:\Python\leetbattle
+python leetbattle_api.py
 ```
 
 You should see:
@@ -60,13 +60,13 @@ You should see:
 Open a **new terminal** and run:
 
 ```bash
-cd a:\Python\leetcode-compare
+cd a:\Python\leetbattle
 python -m http.server 8000
 ```
 
 ### Step 3: Open in Browser
 
-Navigate to: **http://localhost:8000**
+Navigate to: **http://localhost:8000/index.html**
 
 ## Usage
 
@@ -159,9 +159,9 @@ GET /api/health
 ## Project Structure
 
 ```
-leetcode-compare/
-├── api.py              # Flask backend server
-├── index.html          # Main HTML structure
+leetbattle/
+├── leetbattle_api.py   # Flask backend server
+├── index.html          # Main HTML structure (landing page)
 ├── style.css           # Styling and animations
 ├── script.js           # Frontend logic
 ├── requirements.txt    # Python dependencies

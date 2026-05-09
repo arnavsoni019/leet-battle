@@ -5,10 +5,10 @@ echo   LeetBattle Dashboard - Starting...
 echo ==========================================
 echo.
 
-cd /d a:\Python\leetcode-compare
+cd /d a:\Python\leetbattle
 
 :: Start API server in background
-start "LeetCode API Server" /min cmd /c "python api.py"
+start "LeetBattle API Server" /min cmd /c "python leetbattle_api.py"
 
 :: Start HTTP file server in background
 start "LeetCode File Server" /min cmd /c "python -m http.server 8000"
