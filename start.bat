@@ -1,7 +1,7 @@
 @echo off
-title LeetCode Battle Dashboard
+title LeetBattle Dashboard
 echo ==========================================
-echo   LeetCode Battle Dashboard - Starting...
+echo   LeetBattle Dashboard - Starting...
 echo ==========================================
 echo.
 

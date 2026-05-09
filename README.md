@@ -1,6 +1,6 @@
-# LeetCode Profile Comparison Website
+# LeetBattle - Profile Comparison Website
 
-A beautiful, real-time comparison dashboard to track your LeetCode progress against your friend's profile. Stay motivated by seeing who's ahead and by how much!
+A beautiful, real-time comparison dashboard to track your LeetCode progress against your friend's profile with LeetBattle. Stay motivated by seeing who's ahead and by how much!
 
 ## Features
 
@@ -51,7 +51,7 @@ python api.py
 
 You should see:
 ```
-🚀 LeetCode Comparison API Server Starting...
+🚀 LeetBattle API Server Starting...
 📡 Server running on http://localhost:5000
 ```
 

@@ -233,7 +233,7 @@ def health_check():
     return jsonify({"status": "ok"})
 
 if __name__ == '__main__':
-    print("LeetCode Comparison API Server Starting...")
+    print("LeetBattle API Server Starting...")
     print(f"Using year: {datetime.now().year}")
     print(f"Server running on http://localhost:5000")
     app.run(debug=True, port=5000, use_reloader=False)
