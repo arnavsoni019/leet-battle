@@ -241,13 +241,13 @@ function drawBarChart(ctx, logicalWidth, logicalHeight, data1, data2, username1,
 
         // User 1 bar with shadow
         if (displayHeight1 > 0) {
-            ctx.shadowColor = 'rgba(233, 30, 99, 0.5)';
+            ctx.shadowColor = 'rgba(10, 132, 255, 0.5)';
             ctx.shadowBlur = 12;
             ctx.shadowOffsetY = 4;
             
             const gradient1 = ctx.createLinearGradient(0, logicalHeight - padding - displayHeight1, 0, logicalHeight - padding);
-            gradient1.addColorStop(0, '#ff4081');
-            gradient1.addColorStop(1, '#c2185b');
+            gradient1.addColorStop(0, '#5ac8fa');
+            gradient1.addColorStop(1, '#0a84ff');
             ctx.fillStyle = gradient1;
             
             ctx.beginPath();
@@ -267,13 +267,13 @@ function drawBarChart(ctx, logicalWidth, logicalHeight, data1, data2, username1,
 
         // User 2 bar with shadow
         if (displayHeight2 > 0) {
-            ctx.shadowColor = 'rgba(0, 191, 165, 0.5)';
+            ctx.shadowColor = 'rgba(191, 90, 242, 0.5)';
             ctx.shadowBlur = 12;
             ctx.shadowOffsetY = 4;
             
             const gradient2 = ctx.createLinearGradient(0, logicalHeight - padding - displayHeight2, 0, logicalHeight - padding);
-            gradient2.addColorStop(0, '#1de9b6');
-            gradient2.addColorStop(1, '#00897b');
+            gradient2.addColorStop(0, '#da8fff');
+            gradient2.addColorStop(1, '#bf5af2');
             ctx.fillStyle = gradient2;
             
             ctx.beginPath();
@@ -302,9 +302,9 @@ function drawBarChart(ctx, logicalWidth, logicalHeight, data1, data2, username1,
     const legendY = 25;
     
     // User 1 Legend
-    ctx.shadowColor = 'rgba(233, 30, 99, 0.5)';
+    ctx.shadowColor = 'rgba(10, 132, 255, 0.5)';
     ctx.shadowBlur = 10;
-    ctx.fillStyle = '#ff4081';
+    ctx.fillStyle = '#0a84ff';
     ctx.beginPath();
     ctx.arc(padding + 20, legendY, 6, 0, 2 * Math.PI);
     ctx.fill();
@@ -318,9 +318,9 @@ function drawBarChart(ctx, logicalWidth, logicalHeight, data1, data2, username1,
 
     // User 2 Legend
     const user2LegendX = padding + 150 + ctx.measureText(username1).width;
-    ctx.shadowColor = 'rgba(0, 191, 165, 0.5)';
+    ctx.shadowColor = 'rgba(191, 90, 242, 0.5)';
     ctx.shadowBlur = 10;
-    ctx.fillStyle = '#1de9b6';
+    ctx.fillStyle = '#bf5af2';
     ctx.beginPath();
     ctx.arc(user2LegendX, legendY, 6, 0, 2 * Math.PI);
     ctx.fill();

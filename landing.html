@@ -11,214 +11,30 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet">
+        <link rel="stylesheet" href="style.css?v=1.2">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #0d0d0d;
-            color: #e0e0e0;
-            min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
         }
-
-        .background-gradient {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at 20% 50%, rgba(233, 30, 99, 0.04) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(0, 191, 165, 0.03) 0%, transparent 50%);
-            z-index: -1;
-            animation: gradientShift 15s ease infinite;
-        }
-
-        @keyframes gradientShift {
-
-            0%,
-            100% {
-                opacity: 1;
-            }
-
-            50% {
-                opacity: 0.8;
-            }
-        }
-
-        .container {
+        
+        .landing-container {
             max-width: 600px;
             width: 90%;
-            padding: 3rem;
-            background: rgba(26, 26, 30, 0.95);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 24px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            padding: 3.5rem;
             text-align: center;
         }
 
-        .title {
-            font-size: 3rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #e91e63 0%, #ad1457 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 0.5rem;
-            animation: titlePulse 2s ease-in-out infinite;
-        }
-
-        @keyframes titlePulse {
-
-            0%,
-            100% {
-                transform: scale(1);
-            }
-
-            50% {
-                transform: scale(1.02);
-            }
-        }
-
-        .subtitle {
-            font-size: 1.125rem;
-            color: #9e9e9e;
-            font-weight: 500;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            margin-bottom: 3rem;
-        }
-
-        .input-section {
-            margin-bottom: 2rem;
-        }
-
-        .input-wrapper {
-            margin-bottom: 1.5rem;
-        }
-
-        .input-wrapper label {
-            display: block;
-            font-size: 0.875rem;
-            font-weight: 600;
-            color: #9e9e9e;
-            margin-bottom: 0.5rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            text-align: left;
-        }
-
-        .input-wrapper input {
-            width: 100%;
-            padding: 1rem 1.5rem;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 12px;
-            color: #e0e0e0;
-            font-size: 1.125rem;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            outline: none;
-        }
-
-        .input-wrapper input:focus {
-            border-color: #e91e63;
-            background: rgba(255, 255, 255, 0.05);
-            box-shadow: 0 0 0 3px rgba(233, 30, 99, 0.1);
-        }
-
-        .input-wrapper input::placeholder {
-            color: #616161;
-        }
-
-        .vs-divider {
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: #e91e63;
-            margin: 1.5rem 0;
-            text-shadow: 0 0 10px rgba(233, 30, 99, 0.4);
-        }
-
-        .start-btn {
-            width: 100%;
-            padding: 1.25rem 2rem;
-            background: linear-gradient(135deg, #e91e63 0%, #c2185b 100%);
-            border: none;
-            border-radius: 12px;
-            color: #ffffff;
-            font-size: 1.25rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .start-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: left 0.5s ease;
-        }
-
-        .start-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 20px rgba(233, 30, 99, 0.2);
-        }
-
-        .start-btn:hover::before {
-            left: 100%;
-        }
-
-        .start-btn:active {
-            transform: translateY(0);
-        }
-
-        .start-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .error-message {
-            background: rgba(244, 67, 54, 0.08);
-            border: 1px solid rgba(244, 67, 54, 0.3);
-            border-radius: 12px;
-            padding: 1rem;
-            margin-top: 1rem;
-            color: #f44336;
-            font-weight: 500;
-            display: none;
-        }
-
-        .error-message.show {
-            display: block;
-        }
-
         @media (max-width: 768px) {
-            .container {
+            .landing-container {
                 padding: 2rem;
             }
-
             .title {
-                font-size: 2rem;
-            }
-
-            .subtitle {
-                font-size: 1rem;
+                font-size: 2.5rem;
             }
         }
     </style>
@@ -227,11 +43,11 @@
 <body>
     <div class="background-gradient"></div>
 
-    <div class="container">
+    <div class="container glass-card landing-container">
         <h1 class="title">LeetCode Battle Arena</h1>
         <p class="subtitle">Compare. Compete. Conquer.</p>
 
-        <div class="input-section">
+        <div class="input-group">
             <div class="input-wrapper">
                 <label for="user1-input">Your LeetCode Username</label>
                 <input type="text" id="user1-input" placeholder="Enter your username" autocomplete="off">
