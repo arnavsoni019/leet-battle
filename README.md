@@ -159,13 +159,16 @@ GET /api/health
 ## Project Structure
 
 ```
-leetbattle/
-├── leetbattle_api.py   # Flask backend server
-├── index.html          # Main HTML structure (landing page)
-├── style.css           # Styling and animations
-├── script.js           # Frontend logic
-├── requirements.txt    # Python dependencies
-└── README.md          # This file
+leet-battle/
+├── leetbattle_api.py       # Flask backend server
+├── index.html              # Landing page (user input)
+├── dashboard.html          # Main comparison dashboard
+├── style.css               # Global styles and branding
+├── dashboard-styles.css    # Dashboard-specific layout and components
+├── dashboard.js            # Core application logic and API integration
+├── leetbattle.bat          # Windows startup script
+├── requirements.txt        # Python dependencies
+└── README.md               # Documentation
 ```
 
 ## Browser Compatibility
