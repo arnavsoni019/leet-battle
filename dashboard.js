@@ -1,5 +1,5 @@
 // Configuration
-const API_BASE_URL = 'http://localhost:5000/api';
+const API_BASE_URL = '/api';
 const AUTO_REFRESH_INTERVAL = 120000; // 2 minutes
 
 let autoRefreshEnabled = true;
