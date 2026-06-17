@@ -1,141 +1,99 @@
-# LeetBattle - Profile Comparison Website
+# ⚔️ LeetBattle — Settle the Rivalry
 
-A beautiful, real-time comparison dashboard to track your LeetCode progress against your friend's profile with LeetBattle. Stay motivated by seeing who's ahead and by how much!
+A head-to-head LeetCode comparison dashboard that tracks two profiles in real time. Stay motivated by seeing who's ahead and by how much.
+
+## What's New in v2.0
+
+- **Redesigned UI** — new duel-style landing page with *YOU vs RIVAL* seats
+- **Custom SVG icon system** — emoji replaced with hand-tuned SVG icons across every button and section header
+- **Typography overhaul** — Space Grotesk headings, Inter body text, JetBrains Mono for stats
+- **Animated counters** — number values ease into place instead of snapping
+- **Updated color palette** — cyan/amber accent bars in charts replacing the old blue/purple scheme
+- **Smarter input handling** — case-insensitive duplicate check, prefilled inputs from last session
+- **Polish pass** — updated meta descriptions, tagline copy, and footer note
 
 ## Features
 
-✨ **Real-time Comparison** - Compare two LeetCode profiles side-by-side
-📊 **Detailed Statistics** - View total problems solved, acceptance rate, ranking, and more
-🎯 **Difficulty Breakdown** - See progress across Easy, Medium, and Hard problems
-🔄 **Auto-refresh** - Automatically updates every 30 seconds to show current stats
-💾 **Persistent Storage** - Saves usernames locally for quick access
-🎨 **Beautiful UI** - Modern dark theme with glassmorphism and smooth animations
-📱 **Responsive Design** - Works perfectly on desktop, tablet, and mobile
+- **Real-time Comparison** — side-by-side profile stats with live status indicators
+- **Difficulty Breakdown** — Easy / Medium / Hard solved counts with progress rings
+- **7-Day Activity Chart** — canvas bar chart showing daily submissions for both users
+- **Recent Solves** — latest accepted problems per user
+- **Auto-refresh** — every 30 s with a visible countdown, toggleable
+- **Persistent Storage** — usernames saved in `localStorage` for quick reloads
+- **Responsive Design** — fully usable on desktop, tablet, and mobile
 
 ## Tech Stack
 
-- **Backend**: Python Flask with GraphQL integration
-- **Frontend**: HTML5, CSS3, JavaScript (Vanilla)
-- **API**: LeetCode's public GraphQL endpoint
-- **Styling**: Custom CSS with modern design patterns
+| Layer    | Technology |
+|----------|------------|
+| Backend  | Python · Flask · GraphQL proxy |
+| Frontend | HTML5 · CSS3 · Vanilla JS |
+| API      | LeetCode public GraphQL endpoint |
+| Fonts    | Space Grotesk · Inter · JetBrains Mono (Google Fonts) |
 
-## Installation
+## Getting Started
 
 ### Prerequisites
 
-- Python 3.7 or higher
-- pip (Python package manager)
+- Python 3.7+
+- pip
 
-### Setup Steps
-
-1. **Navigate to the project directory**
-   ```bash
-   cd a:\Python\leetbattle
-   ```
-
-2. **Install Python dependencies**
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-## Running the Application
-
-### Step 1: Start the Backend Server
-
-Open a terminal and run:
+### Install
 
 ```bash
-cd a:\Python\leetbattle
+cd leet-battle
+pip install -r requirements.txt
+```
+
+### Run
+
+**1 — Start the API server**
+
+```bash
 python leetbattle_api.py
 ```
 
 You should see:
+
 ```
 🚀 LeetBattle API Server Starting...
 📡 Server running on http://localhost:5000
 ```
 
-### Step 2: Start the Frontend Server
-
-Open a **new terminal** and run:
+**2 — Serve the frontend** (in a second terminal)
 
 ```bash
-cd a:\Python\leetbattle
 python -m http.server 8000
 ```
 
-### Step 3: Open in Browser
-
-Navigate to: **http://localhost:8000/index.html**
+**3 — Open** → [http://localhost:8000](http://localhost:8000)
 
 ## Usage
 
-1. **Enter Usernames**: Type your LeetCode username in the left field and your friend's username in the right field
-2. **Compare**: Click the "Compare Profiles" button
-3. **View Results**: See detailed statistics and who's ahead
-4. **Auto-refresh**: The dashboard automatically updates every 30 seconds (can be toggled off)
-5. **Manual Refresh**: Click the "Refresh Now" button to update immediately
+1. Enter your LeetCode handle in the **YOU** field and your rival's in the **RIVAL** field.
+2. Click **Enter the arena**.
+3. The dashboard loads with live stats, charts, and a head-to-head breakdown.
+4. Data refreshes automatically every 30 seconds (toggle with the switch).
+5. Hit **Refresh** to update instantly, or **Change** to pick different handles.
 
-## Features Explained
+## Status Indicators
 
-### Status Indicators
-- 🟢 **Leading** - Green badge shows you're ahead
-- 🔴 **Trailing** - Red badge shows you're behind
-- 🟡 **Tied** - Yellow badge shows equal progress
-
-### Statistics Displayed
-- **Total Solved** - Total number of problems solved
-- **Acceptance Rate** - Percentage of accepted submissions
-- **Recent Accepted** - Number of recently accepted submissions
-- **Reputation** - LeetCode reputation points
-- **Ranking** - Global LeetCode ranking
-- **Difficulty Breakdown** - Problems solved by difficulty (Easy/Medium/Hard)
-
-### Auto-refresh
-- Automatically fetches new data every 30 seconds
-- Shows countdown timer
-- Can be toggled on/off
-- Manual refresh button available
-
-### Local Storage
-- Usernames are saved in browser
-- Automatically loads last comparison on page refresh
-- No need to re-enter usernames
-
-## Troubleshooting
-
-### Backend Issues
-
-**Problem**: `ModuleNotFoundError: No module named 'flask'`
-**Solution**: Install dependencies with `pip install -r requirements.txt`
-
-**Problem**: Port 5000 already in use
-**Solution**: Stop other applications using port 5000 or modify the port in `api.py`
-
-### Frontend Issues
-
-**Problem**: Can't connect to API
-**Solution**: Make sure the backend server is running on http://localhost:5000
-
-**Problem**: User not found
-**Solution**: Verify the LeetCode username is correct (case-sensitive)
-
-### Browser Issues
-
-**Problem**: Page not loading
-**Solution**: Make sure you're accessing http://localhost:8000 (not file://)
-
-**Problem**: Data not refreshing
-**Solution**: Check browser console for errors and ensure backend is running
+| Badge   | Meaning |
+|---------|---------|
+| 🟢 Leading  | You're ahead in that metric |
+| 🔴 Trailing | You're behind |
+| 🟡 Tied     | Equal progress |
 
 ## API Endpoints
 
 ### Get User Statistics
+
 ```
 GET /api/user/<username>
 ```
 
 **Response:**
+
 ```json
 {
   "username": "example_user",
@@ -152,6 +110,7 @@ GET /api/user/<username>
 ```
 
 ### Health Check
+
 ```
 GET /api/health
 ```
@@ -160,40 +119,46 @@ GET /api/health
 
 ```
 leet-battle/
-├── leetbattle_api.py       # Flask backend server
-├── index.html              # Landing page (user input)
-├── dashboard.html          # Main comparison dashboard
-├── style.css               # Global styles and branding
-├── dashboard-styles.css    # Dashboard-specific layout and components
-├── dashboard.js            # Core application logic and API integration
-├── leetbattle.bat          # Windows startup script
-├── requirements.txt        # Python dependencies
-└── README.md               # Documentation
+├── leetbattle_api.py       # Flask backend – proxies LeetCode GraphQL
+├── index.html              # Landing page (duel-style input)
+├── dashboard.html          # Comparison dashboard
+├── style.css               # Global design tokens, landing page styles
+├── dashboard-styles.css    # Dashboard-specific layout & components
+├── dashboard.js            # Core app logic, chart rendering, animations
+├── leetbattle.bat          # Windows one-click launcher
+├── create_shortcut.ps1     # Creates a desktop shortcut (Windows)
+├── requirements.txt        # Python dependencies (Flask, requests)
+└── README.md               # You are here
 ```
+
+## Troubleshooting
+
+| Problem | Fix |
+|---------|-----|
+| `ModuleNotFoundError: No module named 'flask'` | `pip install -r requirements.txt` |
+| Port 5000 in use | Stop the other process or change the port in `leetbattle_api.py` |
+| Can't connect to API | Make sure the backend is running on `http://localhost:5000` |
+| User not found | Double-check the LeetCode username (case-sensitive) |
+| Page won't load | Access via `http://localhost:8000`, not `file://` |
 
 ## Browser Compatibility
 
-- ✅ Chrome (recommended)
-- ✅ Firefox
-- ✅ Edge
-- ✅ Safari
-- ✅ Opera
+Chrome · Firefox · Edge · Safari · Opera
 
 ## Notes
 
 - LeetCode usernames are case-sensitive
-- The app uses LeetCode's public GraphQL API (no authentication required)
-- Data is fetched in real-time from LeetCode servers
-- No data is stored on the server (privacy-friendly)
+- Uses LeetCode's public GraphQL API — no authentication required
+- All data is fetched in real time; nothing is stored on the server
 
 ## Future Enhancements
 
-- Contest ratings comparison
+- Contest rating comparison
 - Submission calendar heatmap
 - Historical progress tracking
-- Multiple user comparison (3+ users)
-- Dark/light theme toggle
-- Export comparison as image
+- Multi-user comparison (3+ users)
+- Light / dark theme toggle
+- Export comparison as shareable image
 
 ## License
 
@@ -201,4 +166,4 @@ This project is for educational and personal use.
 
 ---
 
-**Built with 💪 for competitive coders**
+**Built with ⚔️ for competitive coders**

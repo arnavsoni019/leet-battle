@@ -5,68 +5,66 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description"
-        content="Compare your LeetCode profile with friends in real-time. Track progress, submissions, and stay motivated.">
-    <title>LeetBattle - Compare Profiles</title>
+        content="Settle the rivalry. Track two LeetCode profiles head-to-head in real time.">
+    <title>LeetBattle — Settle the rivalry</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap"
         rel="stylesheet">
-        <link rel="stylesheet" href="style.css?v=1.2">
-    <style>
-        body {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0;
-            padding: 0;
-            min-height: 100vh;
-        }
-        
-        .landing-container {
-            max-width: 600px;
-            width: 90%;
-            padding: 3.5rem;
-            text-align: center;
-        }
-
-        @media (max-width: 768px) {
-            .landing-container {
-                padding: 2rem;
-            }
-            .title {
-                font-size: 2.5rem;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="style.css?v=2.0">
 </head>
 
-<body>
+<body class="landing">
     <div class="background-gradient"></div>
 
-    <div class="container glass-card landing-container">
-        <h1 class="title">LeetBattle</h1>
-        <p class="subtitle">Compare. Compete. Conquer.</p>
+    <main class="stage">
+        <header class="brand">
+            <div class="brand-mark">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                    stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="m6.5 6.5 11 11" />
+                    <path d="m21 21-1-1" />
+                    <path d="m3 3 1 1" />
+                    <path d="m18 22 4-4" />
+                    <path d="m2 6 4-4" />
+                    <path d="m3 10 7-7" />
+                    <path d="m14 21 7-7" />
+                </svg>
+            </div>
+            <h1 class="wordmark">Leet<span>Battle</span></h1>
+            <p class="tagline">Two profiles. One leaderboard. Watch the rivalry play out in real time.</p>
+        </header>
 
-        <div class="input-group">
-            <div class="input-wrapper">
-                <label for="user1-input">Your LeetCode Username</label>
-                <input type="text" id="user1-input" placeholder="Enter your username" autocomplete="off">
+        <section class="duel">
+            <div class="seat seat--you">
+                <span class="seat-tag">YOU</span>
+                <label for="user1-input">Your LeetCode handle</label>
+                <input type="text" id="user1-input" placeholder="e.g. neetcode" autocomplete="off" spellcheck="false">
             </div>
 
-            <div class="vs-divider">VS</div>
+            <div class="versus"><span>VS</span></div>
 
-            <div class="input-wrapper">
-                <label for="user2-input">Friend's LeetCode Username</label>
-                <input type="text" id="user2-input" placeholder="Enter friend's username" autocomplete="off">
+            <div class="seat seat--rival">
+                <span class="seat-tag">RIVAL</span>
+                <label for="user2-input">Their LeetCode handle</label>
+                <input type="text" id="user2-input" placeholder="e.g. striver" autocomplete="off" spellcheck="false">
             </div>
-        </div>
+        </section>
 
-        <button id="start-btn" class="start-btn">
-            Start Comparison
+        <button id="start-btn" class="cta">
+            Enter the arena
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
+                stroke-linejoin="round" aria-hidden="true">
+                <path d="M5 12h14" />
+                <path d="m12 5 7 7-7 7" />
+            </svg>
         </button>
 
         <div id="error-message" class="error-message"></div>
-    </div>
+
+        <p class="footnote">Public LeetCode data only — no login, nothing stored on a server.</p>
+    </main>
 
     <script>
         const user1Input = document.getElementById('user1-input');
@@ -74,48 +72,38 @@
         const startBtn = document.getElementById('start-btn');
         const errorMessage = document.getElementById('error-message');
 
-        // Handle Enter key
-        user1Input.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') startComparison();
-        });
+        // Prefill from last session if available
+        user1Input.value = localStorage.getItem('leetcode_user1') || '';
+        user2Input.value = localStorage.getItem('leetcode_user2') || '';
 
-        user2Input.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') startComparison();
-        });
-
+        user1Input.addEventListener('keypress', (e) => { if (e.key === 'Enter') startComparison(); });
+        user2Input.addEventListener('keypress', (e) => { if (e.key === 'Enter') startComparison(); });
         startBtn.addEventListener('click', startComparison);
 
         function startComparison() {
             const username1 = user1Input.value.trim();
             const username2 = user2Input.value.trim();
 
-            // Validate inputs
             if (!username1 || !username2) {
-                showError('Please enter both usernames');
+                showError('Enter both handles to start the battle.');
                 return;
             }
 
-            if (username1 === username2) {
-                showError('Please enter different usernames');
+            if (username1.toLowerCase() === username2.toLowerCase()) {
+                showError('Pick two different handles — you can\'t battle yourself.');
                 return;
             }
 
-            // Save usernames
-            localStorage.removeItem('leetcode_user1');
-            localStorage.removeItem('leetcode_user2');
             localStorage.setItem('leetcode_user1', username1);
             localStorage.setItem('leetcode_user2', username2);
 
-            // Redirect to dashboard
             window.location.href = `dashboard.html?user1=${encodeURIComponent(username1)}&user2=${encodeURIComponent(username2)}`;
         }
 
         function showError(message) {
             errorMessage.textContent = message;
             errorMessage.classList.add('show');
-            setTimeout(() => {
-                errorMessage.classList.remove('show');
-            }, 3000);
+            setTimeout(() => errorMessage.classList.remove('show'), 3500);
         }
     </script>
 </body>

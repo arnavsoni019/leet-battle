@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Redirect to landing page if no usernames provided
     if (!currentUser1 || !currentUser2) {
-        window.location.href = 'landing.html';
+        window.location.href = 'index.html';
         return;
     }
 
@@ -110,11 +110,28 @@ function displayDashboard(data1, data2) {
     updateRecentProblems('user2', data2);
 }
 
+// Animate a number from its current displayed value up/down to a target.
+function animateValue(el, end, { suffix = '', duration = 900 } = {}) {
+    if (!el) return;
+    end = Number(end) || 0;
+    const start = parseInt((el.textContent || '0').replace(/[^0-9-]/g, ''), 10) || 0;
+    if (start === end) { el.textContent = formatNumber(end) + suffix; return; }
+    const t0 = performance.now();
+    const ease = t => 1 - Math.pow(1 - t, 3);
+    function frame(now) {
+        const p = Math.min((now - t0) / duration, 1);
+        const val = Math.round(start + (end - start) * ease(p));
+        el.textContent = formatNumber(val) + suffix;
+        if (p < 1) requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+}
+
 function updateStreaks(data1, data2) {
     document.getElementById('user1-name').textContent = data1.username;
-    document.getElementById('user1-streak').textContent = data1.todaySubmissions || 0;
     document.getElementById('user2-name').textContent = data2.username;
-    document.getElementById('user2-streak').textContent = data2.todaySubmissions || 0;
+    animateValue(document.getElementById('user1-streak'), data1.todaySubmissions || 0);
+    animateValue(document.getElementById('user2-streak'), data2.todaySubmissions || 0);
 
     const user1StreakCard = document.getElementById('user1-streak-card');
     const user2StreakCard = document.getElementById('user2-streak-card');
@@ -241,13 +258,13 @@ function drawBarChart(ctx, logicalWidth, logicalHeight, data1, data2, username1,
 
         // User 1 bar with shadow
         if (displayHeight1 > 0) {
-            ctx.shadowColor = 'rgba(10, 132, 255, 0.5)';
+            ctx.shadowColor = 'rgba(45, 212, 255, 0.5)';
             ctx.shadowBlur = 12;
             ctx.shadowOffsetY = 4;
-            
+
             const gradient1 = ctx.createLinearGradient(0, logicalHeight - padding - displayHeight1, 0, logicalHeight - padding);
-            gradient1.addColorStop(0, '#5ac8fa');
-            gradient1.addColorStop(1, '#0a84ff');
+            gradient1.addColorStop(0, '#7af0ff');
+            gradient1.addColorStop(1, '#2dd4ff');
             ctx.fillStyle = gradient1;
             
             ctx.beginPath();
@@ -267,13 +284,13 @@ function drawBarChart(ctx, logicalWidth, logicalHeight, data1, data2, username1,
 
         // User 2 bar with shadow
         if (displayHeight2 > 0) {
-            ctx.shadowColor = 'rgba(191, 90, 242, 0.5)';
+            ctx.shadowColor = 'rgba(255, 176, 32, 0.5)';
             ctx.shadowBlur = 12;
             ctx.shadowOffsetY = 4;
-            
+
             const gradient2 = ctx.createLinearGradient(0, logicalHeight - padding - displayHeight2, 0, logicalHeight - padding);
-            gradient2.addColorStop(0, '#da8fff');
-            gradient2.addColorStop(1, '#bf5af2');
+            gradient2.addColorStop(0, '#ffd07a');
+            gradient2.addColorStop(1, '#ffb020');
             ctx.fillStyle = gradient2;
             
             ctx.beginPath();
@@ -302,9 +319,9 @@ function drawBarChart(ctx, logicalWidth, logicalHeight, data1, data2, username1,
     const legendY = 25;
     
     // User 1 Legend
-    ctx.shadowColor = 'rgba(10, 132, 255, 0.5)';
+    ctx.shadowColor = 'rgba(45, 212, 255, 0.5)';
     ctx.shadowBlur = 10;
-    ctx.fillStyle = '#0a84ff';
+    ctx.fillStyle = '#2dd4ff';
     ctx.beginPath();
     ctx.arc(padding + 20, legendY, 6, 0, 2 * Math.PI);
     ctx.fill();
@@ -318,9 +335,9 @@ function drawBarChart(ctx, logicalWidth, logicalHeight, data1, data2, username1,
 
     // User 2 Legend
     const user2LegendX = padding + 150 + ctx.measureText(username1).width;
-    ctx.shadowColor = 'rgba(191, 90, 242, 0.5)';
+    ctx.shadowColor = 'rgba(255, 176, 32, 0.5)';
     ctx.shadowBlur = 10;
-    ctx.fillStyle = '#bf5af2';
+    ctx.fillStyle = '#ffb020';
     ctx.beginPath();
     ctx.arc(user2LegendX, legendY, 6, 0, 2 * Math.PI);
     ctx.fill();
@@ -336,12 +353,12 @@ function drawBarChart(ctx, logicalWidth, logicalHeight, data1, data2, username1,
 function updateUserCard(prefix, data) {
     document.getElementById(`${prefix}-username`).textContent = data.username;
     document.getElementById(`${prefix}-rank`).textContent = `Rank: ${formatNumber(data.ranking)}`;
-    document.getElementById(`${prefix}-total`).textContent = formatNumber(data.totalSolved);
     document.getElementById(`${prefix}-acceptance`).textContent = `${data.acceptanceRate}%`;
-    document.getElementById(`${prefix}-ranking`).textContent = formatNumber(data.ranking);
-    document.getElementById(`${prefix}-easy`).textContent = formatNumber(data.easySolved);
-    document.getElementById(`${prefix}-medium`).textContent = formatNumber(data.mediumSolved);
-    document.getElementById(`${prefix}-hard`).textContent = formatNumber(data.hardSolved);
+    animateValue(document.getElementById(`${prefix}-total`), data.totalSolved);
+    animateValue(document.getElementById(`${prefix}-ranking`), data.ranking);
+    animateValue(document.getElementById(`${prefix}-easy`), data.easySolved);
+    animateValue(document.getElementById(`${prefix}-medium`), data.mediumSolved);
+    animateValue(document.getElementById(`${prefix}-hard`), data.hardSolved);
 
     const maxSolved = Math.max(data.easySolved, data.mediumSolved, data.hardSolved, 1);
     document.getElementById(`${prefix}-easy-bar`).style.width = `${(data.easySolved / maxSolved) * 100}%`;
